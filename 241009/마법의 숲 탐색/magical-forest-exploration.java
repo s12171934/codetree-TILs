@@ -92,7 +92,7 @@ public class Main {
 		for (int i = 0; i < 4; i++) {
 			int x = endPoint[0] + deltas[endPoint[2]][0] + deltas[i][0];
 			int y = endPoint[1] + deltas[endPoint[2]][1] + deltas[i][1];
-			if (x < 0 || y < 0 || x > R || y >= C || forest[x][y] == 0) continue;
+			if (x < 0 || y < 0 || x >= R + 2 || y >= C || forest[x][y] == 0) continue;
 			max = Math.max(max, forest[x][y]);
 		}
 		forest[endPoint[0]][endPoint[1]] = max;
