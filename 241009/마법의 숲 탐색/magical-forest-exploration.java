@@ -11,7 +11,7 @@ public class Main {
 	}
 
 	static int R, C, K, answer;
-	static int[][] forest, deltas = {{-1,0},{0,-1},{1,0},{0,1}};
+	static int[][] forest, deltas = {{-1,0},{0,1},{1,0},{0,-1}};
 
 	public static void main(String[] args) throws Exception {
 
@@ -41,12 +41,12 @@ public class Main {
 			} else if(isEmptyWest(golemCenter)) {
 				golemCenter[0]++;
 				golemCenter[1]--;
-				golemCenter[2] = (golemCenter[2] + 1) % 4;
+				golemCenter[2] = (golemCenter[2] + 3) % 4;
 				continue;
 			} else if(isEmptyEast(golemCenter)) {
 				golemCenter[0]++;
 				golemCenter[1]++;
-				golemCenter[2] = (golemCenter[2] + 3) % 4;
+				golemCenter[2] = (golemCenter[2] + 1) % 4;
 				continue;
 			}
 			break;
