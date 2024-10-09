@@ -38,12 +38,14 @@ public class Main {
 			if(isEmptySouth(golemCenter)) {
 				golemCenter[0]++;
 				continue;
-			} else if(isEmptyWest(golemCenter)) {
+			} 
+			if(isEmptyWest(golemCenter)) {
 				golemCenter[0]++;
 				golemCenter[1]--;
 				golemCenter[2] = (golemCenter[2] + 3) % 4;
 				continue;
-			} else if(isEmptyEast(golemCenter)) {
+			} 
+			if(isEmptyEast(golemCenter)) {
 				golemCenter[0]++;
 				golemCenter[1]++;
 				golemCenter[2] = (golemCenter[2] + 1) % 4;
