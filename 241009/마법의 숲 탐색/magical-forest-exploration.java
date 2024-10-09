@@ -15,7 +15,7 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 
-		R = read(); C = read(); K = read(); forest = new int[R + 1][C];
+		R = read(); C = read(); K = read(); forest = new int[R + 2][C];
 		while (K-- > 0) solve();
 		System.out.println(answer);
 	}
@@ -23,8 +23,8 @@ public class Main {
 	static void solve() throws Exception {
 
 		int[] endPoint = moveGolem(read() - 1, read());
-		if (endPoint[0] < 2) {
-			forest = new int[R + 1][C];
+		if (endPoint[0] < 3) {
+			forest = new int[R + 2][C];
 			return;
 		}
 		moveSpirit(endPoint);
@@ -57,7 +57,7 @@ public class Main {
 
 	static boolean isEmptySouth(int[] center) {
 
-		if (center[0] == R - 1) return false;
+		if (center[0] == R) return false;
 		if (forest[center[0] + 1][center[1] - 1] != 0) return false;
 		if (forest[center[0] + 2][center[1]] != 0) return false;
 		if (forest[center[0] + 1][center[1] + 1] != 0) return false;
@@ -66,7 +66,7 @@ public class Main {
 
 	static boolean isEmptyWest(int[] center) {
 
-		if (center[0] == R - 1 || center[1] == 1) return false;
+		if (center[0] == R || center[1] == 1) return false;
 		if (center[0] != 0 && forest[center[0] - 1][center[1] - 1] != 0) return false;
 		if (forest[center[0]][center[1] - 2] != 0) return false;
 		if (forest[center[0] + 1][center[1] - 1] != 0) return false;
@@ -77,7 +77,7 @@ public class Main {
 
 	static boolean isEmptyEast(int[] center) {
 
-		if (center[0] == R - 1 || center[1] == C - 2) return false;
+		if (center[0] == R || center[1] == C - 2) return false;
 		if (center[0] != 0 && forest[center[0] - 1][center[1] + 1] != 0) return false;
 		if (forest[center[0]][center[1] + 2] != 0) return false;
 		if (forest[center[0] + 1][center[1] + 1] != 0) return false;
@@ -88,7 +88,7 @@ public class Main {
 
 	static void moveSpirit(int[] endPoint) {
 
-		int max = endPoint[0] + 1;
+		int max = endPoint[0];
 		for (int i = 0; i < 4; i++) {
 			int x = endPoint[0] + deltas[endPoint[2]][0] + deltas[i][0];
 			int y = endPoint[1] + deltas[endPoint[2]][1] + deltas[i][1];
