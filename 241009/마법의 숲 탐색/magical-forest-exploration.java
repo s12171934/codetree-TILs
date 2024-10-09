@@ -119,7 +119,7 @@ public class Main {
 				int x = endPoint[0] + deltas[i][0] + deltas[j][0];
 				int y = endPoint[1] + deltas[i][1] + deltas[j][1];
 				if (x < 0 || y < 0 || x >= R + 2 || y >= C || !doors[x][y]) continue;
-				if(forest[x][y].max < golem.max) forest[x][y] = golem;
+				if(forest[x][y].max < golem.max) forest[x][y].max = golem.max;
 			}
 		}
 
