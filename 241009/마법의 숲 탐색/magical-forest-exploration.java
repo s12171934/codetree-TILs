@@ -10,30 +10,17 @@ public class Main {
 		return Integer.parseInt(st.nextToken());
 	}
 
-	static int R, C, K, answer;
+	static int R, C, K, answer, sequence;
 	static int[][] deltas = {{-1,0},{0,1},{1,0},{0,-1}};
-	static GolemBox[][] forest;
+	static int[] maxDepth, parents;
+	static int[][] forest;
 	static boolean[][] doors;
-
-	static class GolemBox{
-		Golem golem;
-
-		GolemBox(Golem golem){
-			this.golem = golem;
-		}
-	}
-
-	static class Golem{
-		int max;
-
-		Golem(int max) {
-			this.max = max;
-		}
-	}
 
 	public static void main(String[] args) throws Exception {
 
-		R = read(); C = read(); K = read(); forest = new GolemBox[R + 2][C]; doors = new boolean[R + 2][C];
+		R = read(); C = read(); K = read(); forest = new int[R + 2][C]; doors = new boolean[R + 2][C];
+		maxDepth = new int[K + 1]; parents = new int[K + 1];
+		for (int i = 1; i <= K; i++) parents[i] = i;
 		while (K-- > 0) solve();
 		System.out.println(answer);
 	}
@@ -42,7 +29,7 @@ public class Main {
 
 		int[] endPoint = moveGolem(read() - 1, read());
 		if (endPoint[0] < 3) {
-			forest = new GolemBox[R + 2][C];
+			forest = new int[R + 2][C];
 			doors = new boolean[R + 2][C];
 			return;
 		}
@@ -79,47 +66,47 @@ public class Main {
 	static boolean isEmptySouth(int[] center) {
 
 		if (center[0] == R) return false;
-		if (forest[center[0] + 1][center[1] - 1] != null) return false;
-		if (forest[center[0] + 2][center[1]] != null) return false;
-		if (forest[center[0] + 1][center[1] + 1] != null) return false;
+		if (forest[center[0] + 1][center[1] - 1] != 0) return false;
+		if (forest[center[0] + 2][center[1]] != 0) return false;
+		if (forest[center[0] + 1][center[1] + 1] != 0) return false;
 		return true;
 	}
 
 	static boolean isEmptyWest(int[] center) {
 
 		if (center[0] == R || center[1] == 1) return false;
-		if (center[0] != 0 && forest[center[0] - 1][center[1] - 1] != null) return false;
-		if (forest[center[0]][center[1] - 2] != null) return false;
-		if (forest[center[0] + 1][center[1] - 1] != null) return false;
-		if (forest[center[0] + 1][center[1] - 2] != null) return false;
-		if (forest[center[0] + 2][center[1] - 1] != null) return false;
+		if (center[0] != 0 && forest[center[0] - 1][center[1] - 1] != 0) return false;
+		if (forest[center[0]][center[1] - 2] != 0) return false;
+		if (forest[center[0] + 1][center[1] - 1] != 0) return false;
+		if (forest[center[0] + 1][center[1] - 2] != 0) return false;
+		if (forest[center[0] + 2][center[1] - 1] != 0) return false;
 		return true;
 	}
 
 	static boolean isEmptyEast(int[] center) {
 
 		if (center[0] == R || center[1] == C - 2) return false;
-		if (center[0] != 0 && forest[center[0] - 1][center[1] + 1] != null) return false;
-		if (forest[center[0]][center[1] + 2] != null) return false;
-		if (forest[center[0] + 1][center[1] + 1] != null) return false;
-		if (forest[center[0] + 1][center[1] + 2] != null) return false;
-		if (forest[center[0] + 2][center[1] + 1] != null) return false;
+		if (center[0] != 0 && forest[center[0] - 1][center[1] + 1] != 0) return false;
+		if (forest[center[0]][center[1] + 2] != 0) return false;
+		if (forest[center[0] + 1][center[1] + 1] != 0) return false;
+		if (forest[center[0] + 1][center[1] + 2] != 0) return false;
+		if (forest[center[0] + 2][center[1] + 1] != 0) return false;
 		return true;
 	}
 
 	static void moveSpirit(int[] endPoint) {
 
-		Golem golem = new Golem(endPoint[0]);
+		maxDepth[++sequence] = endPoint[0];
 		for (int i = 0; i < 4; i++) {
 			int x = endPoint[0] + deltas[endPoint[2]][0] + deltas[i][0];
 			int y = endPoint[1] + deltas[endPoint[2]][1] + deltas[i][1];
-			if (x < 0 || y < 0 || x >= R + 2 || y >= C || forest[x][y] == null) continue;
-			if (golem.max < forest[x][y].golem.max) golem = forest[x][y].golem;
+			if (x < 0 || y < 0 || x >= R + 2 || y >= C || forest[x][y] == 0) continue;
+			if (getMax(sequence) < getMax(forest[x][y])) changeParent(sequence, forest[x][y]);
 		}
-		forest[endPoint[0]][endPoint[1]] = new GolemBox(golem);
+		forest[endPoint[0]][endPoint[1]] = sequence;
 		doors[endPoint[0] + deltas[endPoint[2]][0]][endPoint[1] + deltas[endPoint[2]][1]] = true;
 		for (int i = 0; i < 4; i++) {
-			forest[endPoint[0] + deltas[i][0]][endPoint[1] + deltas[i][1]] = new GolemBox(golem);
+			forest[endPoint[0] + deltas[i][0]][endPoint[1] + deltas[i][1]] = sequence;
 		}
 
 		for (int i = 0; i < 4; i++) {
@@ -127,10 +114,23 @@ public class Main {
 				int x = endPoint[0] + deltas[i][0] + deltas[j][0];
 				int y = endPoint[1] + deltas[i][1] + deltas[j][1];
 				if (x < 0 || y < 0 || x >= R + 2 || y >= C || !doors[x][y]) continue;
-				if(forest[x][y].golem.max < golem.max) forest[x][y].golem = golem;
+				if (getMax(forest[x][y]) < getMax(sequence)) changeParent(forest[x][y], sequence);
 			}
 		}
 
-		answer += golem.max;
+		answer += getMax(sequence);
+	}
+
+	static int getMax(int idx) {
+		return maxDepth[getParent(idx)];
+	}
+
+	static int getParent(int idx) {
+		if (idx != parents[idx]) parents[idx] = getParent(parents[idx]);
+		return parents[idx];
+	}
+
+	static void changeParent(int min, int max) {
+		parents[min] = getParent(max);
 	}
 }
