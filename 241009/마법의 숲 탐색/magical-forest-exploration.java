@@ -126,7 +126,7 @@ public class Main {
 	}
 
 	static int getParent(int idx) {
-		if (idx != parents[idx]) parents[idx] = getParent(parents[idx]);
+		if (idx != parents[idx]) idx = getParent(parents[idx]);
 		return parents[idx];
 	}
 
