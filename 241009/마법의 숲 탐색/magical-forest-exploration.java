@@ -12,8 +12,16 @@ public class Main {
 
 	static int R, C, K, answer;
 	static int[][] deltas = {{-1,0},{0,1},{1,0},{0,-1}};
-	static Golem[][] forest;
+	static GolemBox[][] forest;
 	static boolean[][] doors;
+
+	static class GolemBox{
+		Golem golem;
+
+		GolemBox(Golem golem){
+			this.golem = golem;
+		}
+	}
 
 	static class Golem{
 		int max;
@@ -25,7 +33,7 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 
-		R = read(); C = read(); K = read(); forest = new Golem[R + 2][C]; doors = new boolean[R + 2][C];
+		R = read(); C = read(); K = read(); forest = new GolemBox[R + 2][C]; doors = new boolean[R + 2][C];
 		while (K-- > 0) solve();
 		System.out.println(answer);
 	}
@@ -34,7 +42,7 @@ public class Main {
 
 		int[] endPoint = moveGolem(read() - 1, read());
 		if (endPoint[0] < 3) {
-			forest = new Golem[R + 2][C];
+			forest = new GolemBox[R + 2][C];
 			doors = new boolean[R + 2][C];
 			return;
 		}
@@ -106,12 +114,12 @@ public class Main {
 			int x = endPoint[0] + deltas[endPoint[2]][0] + deltas[i][0];
 			int y = endPoint[1] + deltas[endPoint[2]][1] + deltas[i][1];
 			if (x < 0 || y < 0 || x >= R + 2 || y >= C || forest[x][y] == null) continue;
-			if (golem.max < forest[x][y].max) golem = forest[x][y];
+			if (golem.max < forest[x][y].golem.max) golem = forest[x][y].golem;
 		}
-		forest[endPoint[0]][endPoint[1]] = golem;
+		forest[endPoint[0]][endPoint[1]] = new GolemBox(golem);
 		doors[endPoint[0] + deltas[endPoint[2]][0]][endPoint[1] + deltas[endPoint[2]][1]] = true;
 		for (int i = 0; i < 4; i++) {
-			forest[endPoint[0] + deltas[i][0]][endPoint[1] + deltas[i][1]] = golem;
+			forest[endPoint[0] + deltas[i][0]][endPoint[1] + deltas[i][1]] = new GolemBox(golem);
 		}
 
 		for (int i = 0; i < 4; i++) {
@@ -119,7 +127,7 @@ public class Main {
 				int x = endPoint[0] + deltas[i][0] + deltas[j][0];
 				int y = endPoint[1] + deltas[i][1] + deltas[j][1];
 				if (x < 0 || y < 0 || x >= R + 2 || y >= C || !doors[x][y]) continue;
-				if(forest[x][y].max < golem.max) forest[x][y].max = golem.max;
+				if(forest[x][y].golem.max < golem.max) forest[x][y].golem = golem;
 			}
 		}
 
