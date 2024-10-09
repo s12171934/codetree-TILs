@@ -131,6 +131,6 @@ public class Main {
 	}
 
 	static void changeParent(int min, int max) {
-		parents[min] = getParent(max);
+		parents[min] = max;
 	}
 }
